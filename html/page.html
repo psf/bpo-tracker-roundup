@@ -77,7 +77,7 @@ status_notresolved string:-1,1,2,4;
            <a href="issue?@template=search&status=1" i18n:translate="">Search</a>
          </li>
          <li>
-           <form method="post" tal:attributes="action request/base">
+           <form method="post" tal:attributes="action string:${request/env/PATH_INFO}">
              <input type="submit" class="form-small" value="Show issue:"
                     i18n:attributes="value"/>
              <input class="form-small" size="4"
@@ -93,7 +93,7 @@ status_notresolved string:-1,1,2,4;
    <ul>
      <li tal:condition="python:request.user.username=='anonymous'" class="submenu">
       <b i18n:translate="">User</b>
-     <form method="post" tal:attributes="action request/base">
+     <form method="post" tal:attributes="action string:${request/env/PATH_INFO}">
        <ul>
       <li>
        <tal:span i18n:translate="">Login</tal:span><br/>

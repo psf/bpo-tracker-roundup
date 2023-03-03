@@ -1,8 +1,9 @@
 import re, math
 from roundup.cgi.actions import Action
 from roundup.cgi.exceptions import *
-
-import xmlrpclib, socket
+#from roundup.anypy import xmlrpc_
+import xmlrpclib
+import socket
 
 REVPAT = re.compile(r'(r[0-9]+\b|rev(ision)? [0-9]+\b)')
 
@@ -30,7 +31,7 @@ def train_spambayes(db, content, tokens, is_spam):
     try:
         server.train({'content':content}, tokens, {}, is_spam)
         return (True, None)
-    except (socket.error, xmlrpclib.Error) as e:
+    except (socket.error, xmlrpc_.client.Error) as e:
         return (False, str(e))
 
 
@@ -41,9 +42,9 @@ class SpambayesClassify(Action):
         (content, tokens) = extract_classinfo(self.db,
                                               self.classname, self.nodeid)
 
-        if self.form.has_key("trainspam"):
+        if "trainspam" in self.form:
             is_spam = True
-        elif self.form.has_key("trainham"):
+        elif "trainham" in self.form:
             is_spam = False
 
         (status, errmsg) = train_spambayes(self.db, content, tokens,

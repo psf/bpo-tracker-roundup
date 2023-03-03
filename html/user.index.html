@@ -49,11 +49,10 @@
  <th i18n:translate="">Real name</th>
  <th i18n:translate="">Organisation</th>
  <th i18n:translate="">Email address</th>
- <th i18n:translate="">Phone number</th>
  <th tal:condition="context/is_edit_ok" i18n:translate="">Retire</th>
 </tr>
 <tal:block repeat="user batch">
-<tr tal:attributes="class python:['normal', 'alt'][repeat['user'].index%6/3]">
+<tr tal:attributes="class python:['normal', 'alt'][repeat['user'].index%6//3]">
  <td>
   <a tal:attributes="href string:user${user/id}"
      tal:content="user/username">username</a>
@@ -61,7 +60,6 @@
  <td tal:content="python:user.realname.plain() or default">&nbsp;</td>
  <td tal:content="python:user.organisation.plain() or default">&nbsp;</td>
  <td tal:content="python:user.address.email() or default">&nbsp;</td>
- <td tal:content="python:user.phone.plain() or default">&nbsp;</td>
  <td tal:condition="context/is_edit_ok">
      <form style="padding:0" method="POST"
            tal:attributes="action string:user${user/id}">

@@ -1,16 +1,21 @@
 <tal:block metal:define-macro="icing">
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+<meta tal:attributes="charset request/client/charset" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title metal:define-slot="head_title">title goes here</title>
 <link media="screen" href="@@file/defaultfonts.css" type="text/css" rel="alternate stylesheet" title="default fonts" />
+<meta name="description" content="Issue tracker for the Roundup Issue Tracker software. Yes, we eat our own dog food." />
 <link rel="stylesheet" type="text/css" href="@@file/style.css" />
-<meta http-equiv="Content-Type"
- tal:attributes="content string:text/html;; charset=${request/client/charset}" />
-<script tal:replace="structure request/base_javascript">
+<script tal:attributes="nonce request/client/client_nonce"
+	tal:replace="structure request/base_javascript">
 </script>
 <metal:x define-slot="more-javascript" />
 
+<link rel="alternate" type="application/rss+xml"
+  tal:attributes="href string:${request/base}@@file/rss.xml"
+  title="Publicly available tracker feed.">
 </head>
 <body
 tal:define="
@@ -30,7 +35,7 @@ status_notresolved string:-1,1,2,4;
        <input type="hidden" name="@group" value="priority" />
        <input type="hidden" name="@filter" value="status"/>
        <input type="hidden" name="status" tal:attributes="value status_notresolved"/>
-       <input class="input-text" id="search-text" name="@search_text" size="10" />
+       <input class="input-text" aria-label="type in search term" id="search-text" name="@search_text" size="10" />
 <input type="submit" id="submit" value="search in open issues" name="submit"
        class="input-button"/>
       </div>
@@ -40,9 +45,9 @@ status_notresolved string:-1,1,2,4;
   <div class="navigation">
   <div class="menu">
   <ul>
-    <li><a href="http://www.roundup-tracker.org" title="home...">Home</a></li>
-    <li><a href="http://pypi.python.org/pypi/roundup" title="Get it !">Download</a></li>
-    <li><a href="http://www.roundup-tracker.org/docs.html" title="What you always wanted to know...">Docs</a></li>
+    <li><a href="https://www.roundup-tracker.org" title="home...">Home</a></li>
+    <li><a href="https://pypi.python.org/pypi/roundup" title="Get it !">Download</a></li>
+    <li><a href="https://www.roundup-tracker.org/docs.html" title="What you always wanted to know...">Docs</a></li>
     <li class="current"><a href="/" i18n:translate="">Issues</a>
      <ul tal:condition="python:request.user.hasPermission('View', 'issue')">
          <li tal:condition="python:request.user.hasPermission('Create', 'issue')">
@@ -77,10 +82,11 @@ status_notresolved string:-1,1,2,4;
            <a href="issue?@template=search&status=1" i18n:translate="">Search</a>
          </li>
          <li>
-           <form method="post" tal:attributes="action string:${request/env/PATH_INFO}">
+           <form method="post" tal:attributes="action request/base">
              <input type="submit" class="form-small" value="Show issue:"
                     i18n:attributes="value"/>
              <input class="form-small" size="4"
+		    aria-label="Type in issue number"
                     type="text" name="@number"/>
              <input type="hidden" name="@type" value="issue"/>
              <input type="hidden" name="@action" value="show"/>
@@ -93,12 +99,14 @@ status_notresolved string:-1,1,2,4;
    <ul>
      <li tal:condition="python:request.user.username=='anonymous'" class="submenu">
       <b i18n:translate="">User</b>
-     <form method="post" tal:attributes="action string:${request/env/PATH_INFO}">
+     <form method="post" tal:attributes="action request/base">
        <ul>
       <li>
-       <tal:span i18n:translate="">Login</tal:span><br/>
-       <input size="10" name="__login_name"/><br/>
-       <input size="10" type="password" name="__login_password"/><br/>
+       <label for="__login" i18n:translate="">Login</label><br/>
+       <input size="10" id="__login" name="__login_name"/><br/>
+       <input size="10" type="password"
+	      aria-label="Password field for login"
+	      name="__login_password"/><br/>
        <input type="hidden" name="@action" value="Login"/>
        <input type="checkbox" name="remember" id="remember"/>
        <label for="remember" i18n:translate="">Remember me?</label><br/>
@@ -183,9 +191,9 @@ status_notresolved string:-1,1,2,4;
   </ul>
 
      </li>
-    <li><a href="http://www.roundup-tracker.org/contact.html" title="Get in touch.">Contact</a></li>
-    <li><a href="http://wiki.roundup-tracker.org" title="Share your ideas...">Wiki</a></li>
-    <li><a href="http://www.roundup-tracker.org/code.html" title="Be the sources with you.">Code</a></li>
+    <li><a href="https://www.roundup-tracker.org/contact.html" title="Get in touch.">Contact</a></li>
+    <li><a href="https://wiki.roundup-tracker.org" title="Share your ideas...">Wiki</a></li>
+    <li><a href="https://www.roundup-tracker.org/code.html" title="Be the sources with you.">Code</a></li>
   </ul>
  </div> <!-- menu -->
 </div> <!-- navigation -->
@@ -213,7 +221,7 @@ status_notresolved string:-1,1,2,4;
 </div> <!-- credits -->
 <!-- Created: Wed Jan 14 11:55:38 EST 2009 -->
 <!-- hhmts start -->
-Last modified: Thu Dec 27 04:16:43 EST 2018
+Last modified: Fri Feb 28 22:02:04 EST 2020
 <!-- hhmts end -->
 </div> <!-- footer -->
 
@@ -360,7 +368,9 @@ current user is allowed to edit.
 
 See user.item.html in the classic template for examples.
 -->
-<script metal:define-macro="user_utils" type="text/javascript" src="@@file/user_utils.js"></script>
+<script metal:define-macro="user_utils" type="text/javascript"
+	src="@@file/user_utils.js"
+	tal:attributes="nonce request/client/client_nonce"></script>
 
 <!-- src: value will be re-used for other input fields -->
 <input metal:define-macro="user_src_input"
